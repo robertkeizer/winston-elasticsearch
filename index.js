@@ -26,7 +26,7 @@ var Elasticsearch = module.exports = winston.transports.Elasticsearch = function
   this.fireAndForget = !!options.fireAndForget;
 
   // Only set typeName if provided, otherwise we will use "level" for types.
-  this.typeName = options.typeName || null;
+  this.typeName = options.typeName || "log";
 
   // Could get more sexy and grab the name from the parent's package.
   this.source = options.source || _dirname( process.mainModule.filename ) || module.filename;
@@ -75,14 +75,14 @@ Elasticsearch.prototype.log = function log( level, msg, meta, callback ) {
   // Using some Logstash naming conventions. (https://gist.github.com/jordansissel/2996677) with some useful variables for debugging.
   var entry = {
     level: level,
-    '@source': self.source,
-    '@timestamp': new Date().toISOString(),
-    '@message': msg
+    'source': self.source,
+    'timestamp': new Date().toISOString(),
+    'message': msg
   }
 
   // Add auto-generated fields unless disabled
   if( !this.disable_fields ) {
-    entry['@fields'] = {
+    entry['fields'] = {
       worker: cluster.isWorker,
       pid: process.pid,
       path: module.parent.filename,
@@ -97,16 +97,22 @@ Elasticsearch.prototype.log = function log( level, msg, meta, callback ) {
 
   // Add tags only if they exist
   if( meta && meta.tags ) {
-    entry['@tags'] = meta && meta.tags;
+    entry['tags'] = meta && meta.tags;
   }
 
   if( meta ) {
-    entry['@fields'] = xtend(entry['@fields'], meta);
+    entry['fields'] = xtend(entry['fields'], meta);
   }
 
+	var createObj = {
+		index: this.indexName,
+		type: this.typeName,
+		body: entry
+	};
 
+console.log(createObj);
   // Need to debug callbacks, they seem to be always called in the incorect context.
-  this.client.index( this.indexName, this.typeName || entry.level || 'log', entry, function done( error, res ) {
+  this.client.create( createObj, function done( error, res ) {
 
     // If we are ignoring callbacks
     if( callback && self.fireAndForget ){

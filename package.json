@@ -1,8 +1,7 @@
 {
   "name": "winston-elasticsearch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An Elasticsearch transport for winston",
-  "author": "Openify.it <info@openify.it>",
   "contributors": [
     {
       "name": "Jacques-Olivier D. Bernier",
@@ -11,11 +10,15 @@
     {
       "name": "Andy Potanin",
       "url": "https://github.com/andypotanin"
+    },
+    {
+      "name": "Robert Keizer",
+      "url": "https://github.com/robertkeizer"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/OpenifyIt/winston-elasticsearch.git"
+    "url": "http://github.com/robertkeizer/winston-elasticsearch.git"
   },
   "keywords": [
     "logging",
