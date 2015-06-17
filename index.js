@@ -110,7 +110,6 @@ Elasticsearch.prototype.log = function log( level, msg, meta, callback ) {
 		body: entry
 	};
 
-console.log(createObj);
   // Need to debug callbacks, they seem to be always called in the incorect context.
   this.client.create( createObj, function done( error, res ) {
 
